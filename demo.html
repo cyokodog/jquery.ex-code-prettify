@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Ex Code Prettify | jQuery Plugin :: Demo</title>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen" >
+<link href="jquery.ex-code-prettify.css" rel="stylesheet" type="text/css" media="screen" >
+<style>
+body{
+	margin-bottom:1000px;
+	padding-top:32px;
+}
+.desc strong{
+	color:#ff5577;
+}
+.desc strong.value{
+	color:#0088ff;
+}
+.base-demo-0 textarea{
+	width:100%;
+	height:150px;
+}
+div.demo-contents .row > *{
+	margin-bottom:8px;
+}
+div.demo-contents div.demo-area{
+	padding:8px;
+	border:solid 1px #eee;
+}
+</style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="jquery.hash-contents/jquery.hash-contents.js"></script>
+<script src="google-code-prettify/prettify.js"></script>
+<script src="jquery.ex-code-prettify.js"></script>
+<script src="behave/behave.js"></script>
+<script>
+jQuery(function($){
+
+	//build demo contents
+	(function(){
+		var clone_demo = function(target, count){
+			var org = $(target);
+			for(var i = 0; i < count; i++) org.clone().insertAfter(org);
+			$(target).each(function(index){
+				$(this).data('demo-index', index);
+			});
+		}
+		clone_demo('div.base-demo-1', 3);
+		clone_demo('div.base-demo-2', 2);
+		clone_demo('div.base-demo-3', 1);
+		$('div.base-demo-2').each(function(index){
+			var pos = ['demo-bottom','demo-right','demo-left'][index];
+			$(this).data('demo-pos',pos).find('div.ex-code-prettify').addClass(pos);
+		});
+	})();
+
+	//control demo
+	var demo = function(api){
+		var target = api.getTarget();
+		var index = target.data('demo-index');
+		var esc = function(text){
+			var dummy = $('<div/>').text(text);
+			var text = dummy.html();
+			dummy.remove();
+			return text;
+		}
+		var set_desc = function(html){
+			$('<pre class="desc"/>').html(html).prependTo(target);
+		}
+		if(target.hasClass('base-demo-0')){
+			$('a.run').on('click',function(){
+				$('.base-demo-0').removeClass('base-demo-0');
+				$('.code').exCodePrettify();
+				$('.tabToSpace').exCodePrettify({tabToSpace:true});
+			});
+		}
+		else
+		if(target.hasClass('base-demo-1')){
+			if(index == 0){
+				set_desc('<strong>showDemo</strong>:<strong class="value">true</strong>');
+				$('textarea.code').exCodePrettify({
+					showDemo : true
+				});
+			}
+			else
+			if(index == 1){
+				set_desc('<strong>showCode</strong>:<strong class="value">false</strong>, showDemo:true');
+				$('textarea.code').exCodePrettify({
+					showDemo : true,
+					showCode : false
+				});
+			}
+			else
+			if(index == 1){
+				set_desc('<strong>editCode</strong>:<strong class="value">true</strong>, showDemo:true');
+				$('textarea.code').exCodePrettify({
+					showDemo : true,
+					editCode : true
+				});
+			}
+			else{
+				set_desc('<strong>behaveJS</strong>:<strong class="value">true</strong>, editCode:true, showDemo:true');
+				$('textarea.code').exCodePrettify({
+					behaveJS : true,
+					showDemo : true,
+					editCode : true
+				});
+			}
+		}
+		else
+		if(target.hasClass('base-demo-2')){
+			set_desc(esc('<div class="ex-code-prettify ') + '<strong>' + target.data('demo-pos') + '</strong>' + esc('">\n    ...\n</div>'));
+			$('textarea.code').exCodePrettify({
+				behaveJS : true,
+				showDemo : true,
+				editCode : true
+			});
+		}
+		else
+		if(target.hasClass('base-demo-3')){
+			if(index == 0){
+				set_desc(
+					esc('<textarea data-ex-code-prettify-param="{')+'<strong>codeType</strong>:\'<strong class="value">css</strong>'+esc('\'}">...\n')+
+					esc('<textarea data-ex-code-prettify-param="{')+'<strong>codeType</strong>:\'<strong class="value">html</strong>'+esc('\'}">...\n')+
+					esc('<textarea data-ex-code-prettify-param="{')+'<strong>codeType</strong>:\'<strong class="value">script</strong>'+esc('\'}">...')
+				);
+				$('textarea.code').exCodePrettify({
+					behaveJS : true,
+					showDemo : true,
+					editCode : true
+				});
+			}
+			else{
+				$('textarea.script').attr('data-ex-code-prettify-param','{codeType:"script",autoRun:false}');
+				set_desc(
+					'&lt;textarea data-ex-code-prettify-param="{<strong>codeType</strong>:\'<strong class="value">script</strong>\', <strong>autoRun</strong>:<strong class="value">false</strong>}"&gt;...'
+				);
+				set_desc(
+					'<strong>showRunButton</strong>:<strong class="value">true</strong>, <strong>showResetButton</strong>:<strong class="value">true</strong>, showDemo:true, editCode:true, behaveJS : true'
+				);
+				$('textarea.code').exCodePrettify({
+					behaveJS : true,
+					showDemo : true,
+					editCode : true,
+					showRunButton : true,
+					showResetButton : true
+				});
+			}
+		}
+		else
+		if(target.hasClass('base-demo-4')){
+			set_desc(
+				esc('<textarea data-ex-code-prettify-param="{')+'<strong>codeType</strong>:\'<strong class="value">cssFile</strong>'+esc('\'}">...\n')+
+				esc('<textarea data-ex-code-prettify-param="{')+'<strong>codeType</strong>:\'<strong class="value">jsFile</strong>'+esc('\'}">...')
+			);
+
+			$('textarea.code').exCodePrettify({
+				showDemo : true,
+				editCode : true
+			});
+		}
+		else
+		if(target.hasClass('base-demo-5')){
+			$('textarea.code').exCodePrettify({
+				container : 'div.demo-contents',
+				showDemo : true,
+				editCode : true,
+				behaveJS : true
+			});
+		}
+	}
+
+	//control display
+	$('div.demo').hashContents({
+		prefix : 'Demo',
+		listTo : 'ul.index',
+		titleTo : 'span.demo-title',
+		onActive : function(api){
+			demo(api);
+		}
+	});
+
+});
+</script>
+</head>
+<body>
+	<div class="container">
+		<div class="page-header">
+			<h1>Ex Code Prettify</h1>
+			<p class="lead">$( pre or textarea ).exCodePrettify();</p>
+			<div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					<span class="demo-title"></span> <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu index" role="menu">
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+		<div class="collapse navbar-collapse navbar-ex1-collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="https://github.com/cyokodog/jquery.ex-table-filter/blob/gh-pages/README.md" target="_blank"><span class="glyphicon glyphicon-book"></span> Document</a></li>
+				<li><a href="https://github.com/cyokodog/jquery.bootstrap-datetimepicker-ja" target="_blank"><b class="glyphicon glyphicon-download-alt"></b> Download</a></li>
+			</ul>
+		</div>
+	</div>
+	</div>
+
+	<div class="container">
+
+		<div class="demo base-demo-0">
+			<p></p>
+			<br/>
+			<div class="row">
+				<div class="col-md-2"><a class="run btn btn-success" href="#">RUN</a></div>
+				<div class="col-md-5"><pre class="desc">$(element).exCodePrettify()</pre></div>
+				<div class="col-md-5"><pre class="desc">$(element).exCodePrettify({<strong>tabToSpace</strong>:<strong class="value">true</strong>})</pre></div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-md-2">PRE
+				</div>
+				<div class="col-md-5">
+<pre class="code" data-ex-code-prettify-param="{codeType:'html'}">
+&lt;!-- PRE Markup--&gt;
+&lt;div class="container"&gt;
+	&lt;div class="page-header"&gt;
+		&lt;h1&gt;Ex Code Prettify&lt;/h1&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+				</div>
+				<div class="col-md-5">
+<pre class="tabToSpace" data-ex-code-prettify-param="{codeType:'html'}">
+&lt;!-- PRE Markup--&gt;
+&lt;div class="container"&gt;
+	&lt;div class="page-header"&gt;
+		&lt;h1&gt;Ex Code Prettify&lt;/h1&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+				</div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-md-2">TEXTAREA
+				</div>
+				<div class="col-md-5">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'html'}">
+<!-- TEXTAREA Markup -->
+<div class="container">
+	<div class="page-header">
+		<h1>Ex Code Prettify</h1>
+	</div>
+</div>
+</textarea>
+				</div>
+				<div class="col-md-5">
+<textarea class="tabToSpace" data-ex-code-prettify-param="{codeType:'html'}">
+<!-- TEXTAREA Markup -->
+<div class="container">
+	<div class="page-header">
+		<h1>Ex Code Prettify</h1>
+	</div>
+</div>
+</textarea>
+				</div>
+			</div>
+		</div>
+
+
+
+		<div class="demo base-demo-1">
+			<div class="ex-code-prettify">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'html'}">
+<div class="progress">
+	<div class="progress-bar progress-bar-success" style="width: 35%"/>
+	<div class="progress-bar progress-bar-warning" style="width: 20%"/>
+	<div class="progress-bar progress-bar-danger" style="width: 10%"/>
+</div>
+</textarea>
+			</div>
+		</div>
+
+
+
+
+		<div class="demo base-demo-2">
+			<div class="ex-code-prettify">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'html'}">
+<div class="alert alert-success">
+	<strong>Well done!</strong>
+	You successfully.
+</div>
+</textarea>
+			</div>
+		</div>
+
+
+
+
+		<div class="demo base-demo-3">
+			<div class="ex-code-prettify demo-right">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
+.logo{
+	text-align : center;
+	font-size : 20px;
+	opacity:.3;
+	font-family:impact;
+	color:#5588cc;
+}
+</textarea>
+<textarea class="code HTML" data-ex-code-prettify-param="{codeType:'html'}">
+<div class="logo">Ex Code Prettify</div>
+</textarea>
+
+<textarea class="code script" data-ex-code-prettify-param="{codeType:'script'}">
+$('div.logo').animate(
+	{opacity:1, 'font-size':60,'margin-top':30}, 1500,
+	function(){
+		var t = $(this);
+		var method = t.is(':hidden') ? 'fadeIn' : 'fadeOut';
+		t[method](1500,arguments.callee);
+	}
+);
+</textarea>
+			</div>
+		</div>
+
+
+
+
+
+		<div class="demo base-demo-4">
+			<div class="ex-code-prettify demo-right">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'cssFile'}">
+jquery.ex-inplace-editor/jquery.ex-inplace-editor.css
+</textarea>
+<textarea class="code" data-ex-code-prettify-param="{codeType:'jsFile'}">
+jquery.ex-inplace-editor/jquery.ex-inplace-editor.js
+</textarea>
+<textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
+input.inplace-editor{
+	width:200px;
+}
+</textarea>
+<textarea class="code" data-ex-code-prettify-param="{codeType:'html'}">
+	<input type="text" class="form-control inplace-editor"/>
+</textarea>
+<textarea class="code script" data-ex-code-prettify-param="{codeType:'script'}">
+$('input.inplace-editor').exInplaceEditor({
+	nullText : 'click here !',
+	bootstrap : true
+});
+</textarea>
+			</div>
+		</div>
+
+
+
+		<div class="demo base-demo-5 demo-contents">
+			<div class="row">
+				<div class="col-md-12">
+					<button type="button" class="run-button btn btn-success">RUN</button>
+					<button type="button" class="reset-button btn btn-default">RESET</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="demo-area"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
+div.logo{
+	text-align:center;
+	font-weight:bold;
+}
+</textarea>
+				</div>
+				<div class="col-md-6">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'html'}">
+<div class="logo">Design</div>
+</textarea>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'script',autoRun:false}">
+(function(target){
+	var idx = 0, span = target.html('<span>' + target.text().split('').join('</span><span>') + '</span>').find('span');
+	(function(){
+		span.eq(idx).animate({'font-size':150}, 2000, function(){$(this).animate({'opacity':.3}, 2000);});
+		if((idx++) < span.size()) setTimeout(arguments.callee, 300);
+	})();
+})($('div.logo'));
+</textarea>
+				</div>
+			</div>
+		</div>
+
+
+
+	</div>
+</body>
+</html>

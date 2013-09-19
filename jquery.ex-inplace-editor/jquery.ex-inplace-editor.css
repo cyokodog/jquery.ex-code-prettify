@@ -1,0 +1,136 @@
+.ex-ipe-editor{
+	margin:0;
+}
+
+
+.ex-ipe-block{
+	zoom:1;
+}
+.ex-ipe-block,
+.ex-ipe-block .ex-ipe-editor,
+.ex-ipe-block .ex-ipe-label,
+.ex-ipe-block .ex-ipe-edit-tool,
+.ex-ipe-block .ex-ipe-save-tool{
+	display:block;	
+}
+.ex-ipe-block .ex-ipe-save-tool{
+	margin:4px 0;
+}
+.ex-ipe-block .ex-ipe-save-tool a.ex-ipe-save,
+.ex-ipe-block .ex-ipe-save-tool a.ex-ipe-cancel{
+	margin-right:2px;
+}
+
+.ex-ipe-inline,
+.ex-ipe-inline .ex-ipe-editor,
+.ex-ipe-inline .ex-ipe-label,
+.ex-ipe-inline .ex-ipe-edit-tool,
+.ex-ipe-inline .ex-ipe-save-tool{
+	display:inline;	
+}
+.ex-ipe-inline .ex-ipe-save-tool a.ex-ipe-save,
+.ex-ipe-inline .ex-ipe-save-tool a.ex-ipe-cancel{
+	margin-left:2px;
+}
+a.ex-ipe-label{
+	text-decoration:none;
+	color:#0060ff;
+	color:#0088cc;
+border-bottom:dashed 1px #0088cc;
+border-bottom:dashed 1px #ccc;
+}
+a:hover.ex-ipe-label{
+	text-decoration:none;
+	color:#0060ff;
+}
+
+
+a.ex-ipe-btn{
+ 	margin:0 1px 0 0;
+	padding:0 4px;
+	overflow:hidden;
+	/zoom:1;
+	line-height:1.2;
+	font-size:12px;
+	font-family:Arial, Helvetica,sans-serif;
+	text-decoration:none; 
+	cursor:pointer;
+	border:solid 1px #d0d0d0;
+	background:#e8e8e8;
+	color:#3858a8;
+}
+a:hover.ex-ipe-btn{
+	text-decoration:none; 
+	background:#f8f8f8;
+	border-color:#000;
+}
+
+a.ex-ipe-icon,
+a:visited.ex-ipe-icon{
+	cursor:pointer;
+}
+.ex-ipe-inline a.ex-ipe-icon,
+.ex-ipe-inline a:visited.ex-ipe-icon{
+	margin:0 0 0 4px;
+}
+a.ex-ipe-edit,
+a:visited.ex-ipe-edit{
+	padding:0 2px;
+	overflow:hidden;
+	/zoom:1;
+	line-height:1.2;
+	font-size:8px;
+	font-weight:bold;
+	font-family:Arial, Helvetica,sans-serif;
+	text-decoration:none; 
+	background:#1090df;
+	color:#fff;
+}
+a:hover.ex-ipe-edit{
+	text-decoration:none; 
+	background:#000;
+	color:#ffff00;
+}
+
+.ex-ipe-spot{
+	cursor:pointer;
+	background:#ffffcc;
+}
+
+
+.ex-ipe-msgbox{
+	font-size:14px;
+	position:absolute;
+}
+.ex-ipe-saving{
+	background:#ffffcc url("loading.gif") no-repeat;
+}
+.ex-ipe-saving span{
+	margin-left:20px;
+}
+.ex-ipe-err{
+	padding:4px;
+	overflow:hidden;
+	/zoom:1;
+	line-height:1;
+	color:#ff5577;
+	background:#ffdddd;
+}
+a.ex-ipe-err-close{
+	margin-left:4px;
+	padding:0 4px;
+	font-family:Arial, Helvetica,sans-serif;
+	text-decoration:none!important; 
+	cursor:pointer;
+	background:#ffaaaa;
+	color:#fff!important;
+}
+a:hover.ex-ipe-err-close{
+	background:#ff5555;
+}
+
+
+
+
+
+
