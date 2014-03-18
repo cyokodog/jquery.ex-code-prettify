@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8,IE=9,IE=10,IE=11,IE=12" />
 <title>Ex Code Prettify | jQuery Plugin :: Demo</title>
 <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen" >
 <link href="jquery.ex-code-prettify.css" rel="stylesheet" type="text/css" media="screen" >
@@ -169,6 +170,29 @@ jQuery(function($){
 				behaveJS : true
 			});
 		}
+		else
+		if(target.hasClass('base-demo-6')){
+			$('div.example').each(function(i){
+				var prefix = 'ex-code-prettify-ex' + i;
+				var api = $(this).find('textarea.code').exCodePrettify({
+					api : true,
+					autoSaveToStorage : true,
+					autoLoadFromStorage : true,
+					savePrefix : prefix,
+					showRunButton : true,
+					showDemo : true,
+					editCode : true,
+					behaveJS : true
+				});
+				$('a.code-reset-' + (i + 1)).on('click', function(){
+					$.each(api, function(j){
+						api[j].clearStorage();
+					});
+					location.reload();
+					return false;
+				});
+			});
+		}
 	}
 
 	//control display
@@ -219,9 +243,10 @@ jQuery(function($){
 	</div>
 
 	<div class="container">
-
 		<div class="demo base-demo-0">
-			<p></p>
+<!--
+			<h3>ソースコードをハイライト表示する</h3>
+-->
 			<br/>
 			<div class="row">
 				<div class="col-md-2"><a class="run btn btn-success" href="#">RUN</a></div>
@@ -407,6 +432,52 @@ div.logo{
 		if((idx++) < span.size()) setTimeout(arguments.callee, 300);
 	})();
 })($('div.logo'));
+</textarea>
+				</div>
+			</div>
+		</div>
+
+
+
+
+		<div class="demo base-demo-6">
+			<div class="example">
+				<p>Ex.1 （<a class="code-reset-1" href="#">Ex.1 のコードをリセットする</a>）</p>
+				<div class="ex-code-prettify demo-right">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
+.save-key-1{
+	color:#ff5577;
+}
+</textarea>
+<textarea class="code HTML" data-ex-code-prettify-param="{codeType:'html'}">
+<div class="ex1">
+	編集、保存してみてください。<br/>
+	コードは <strong class="save-key-1">ex-code-prettify-ex1</strong> というキーで localStorage に保存され、
+ブラウザを開き直した際、自動的にロードされます。
+</div>
+</textarea>
+<textarea class="code script" data-ex-code-prettify-param="{codeType:'script'}">
+$('div.ex1').hide().slideDown(2000);
+</textarea>
+				</div>
+			</div>
+			<div class="example">
+				<p>Ex.2 （<a class="code-reset-2" href="#">Ex.2 のコードをリセットする</a>）</p>
+				<div class="ex-code-prettify demo-right">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
+.save-key-2{
+	color:#0077ff;
+}
+</textarea>
+<textarea class="code HTML" data-ex-code-prettify-param="{codeType:'html'}">
+<div class="ex2">
+	編集、保存してみてください。<br/>
+	コードは <strong class="save-key-2">ex-code-prettify-ex2</strong> というキーで localStorage に保存され、
+ブラウザを開き直した際、自動的にロードされます。
+</div>
+</textarea>
+<textarea class="code script" data-ex-code-prettify-param="{codeType:'script'}">
+$('div.ex2').hide().slideDown(2000);
 </textarea>
 				</div>
 			</div>

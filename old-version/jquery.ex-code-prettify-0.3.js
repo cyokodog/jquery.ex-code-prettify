@@ -1,5 +1,5 @@
 /*
- * 	Ex Code Prettify 0.4 - jQuery plugin
+ * 	Ex Code Prettify 0.3 - jQuery plugin
  *	written by cyokodog
  *
  *	Copyright (c) 2013 cyokodog 
@@ -81,10 +81,6 @@
 		var o = this,
 		c = o.config = $.extend(true,{}, $.ex.codePrettify.defaults, option, o.getJsonData(target) || {});
 
-
-
-		plugin.status.runtime ++;
-		c.savePrefix = c.savePrefix || (plugin.id + '-' + plugin.status.runtime)
 		c.target = target;
 		c._tag = {
 			css : '<style/>',
@@ -143,8 +139,6 @@
 			c.textarea.val($.trim(c.pre.text()));
 		}
 
-		!c.clearStorage || o.clearStorage();
-		!c.autoLoadFromStorage || o.loadCodeFromStorage();
 
 		if(c.tabToSpace){
 			tabToSpace(c.textarea, c.tabToSpaceSize );
@@ -191,8 +185,6 @@
 				o.viewMode();
 				o._pretty();
 				o.resetDemo();
-				!c.autoSaveToStorage || o.saveCodeToStorage();
-				c.onSave.apply(o, [o]);
 				return false;
 			});
 			if(c.runButton.size()){
@@ -297,61 +289,6 @@
 			});
 		},
 
-		// コード種別の取得
-		getCodeType : function(){
-			var o = this, c = o.config;
-			return c.codeType;
-		},
-
-		// コードの取得
-		getCode : function(){
-			var o = this, c = o.config;
-			return c.textarea.val();
-		},
-
-		// 全てのコードの取得（json形式）
-		getAllCode : function(){
-			var o = this, c = o.config;
-			var codes = {};
-			$.each(c.rendarFrom, function(idx){
-				var api = c.rendarFrom[idx];
-				codes[api.getCodeType()] = api.getCode();
-			});
-			return codes;
-		},
-
-		// local storage 保存コードの削除
-		clearStorage: function(prefix){
-			if(!window.localStorage) return;
-			var o = this, c = o.config;
-			var key = (prefix || c.savePrefix) + '-' + o.getCodeType();
-			localStorage.removeItem(key, o.getCode());
-		},
-
-		// コードの local storage への保存
-		saveCodeToStorage : function(prefix){
-			if(!window.localStorage) return;
-			var o = this, c = o.config;
-			var key = (prefix || c.savePrefix) + '-' + o.getCodeType();
-			return localStorage.setItem(encodeURIComponent(key), o.getCode());
-		},
-
-		// local storage 保存コードの取得
-		getCodeFromStorage : function(prefix){
-			if(!window.localStorage) return;
-			var o = this, c = o.config;
-			var key = (prefix || c.savePrefix) + '-' + o.getCodeType();
-			return localStorage.getItem(encodeURIComponent(key));
-		},
-
-		// local storage 保存コードのロード
-		loadCodeFromStorage : function(prefix){
-			if(!window.localStorage) return;
-			var o = this, c = o.config;
-			var code = o.getCodeFromStorage(prefix);
-			if(code != null) c.textarea.val(code);
-		},
-
 		// テキストエリアの高さ調整
 		_calcTextareaHeight : function(pre){
 			var o = this, c = o.config;
@@ -393,44 +330,39 @@
 		// デモオブジェクトの生成
 		_rendar : function(){
 			var o = this, c = o.config;
-			if(!c.showDemo) return ;
-			try{
-				o._remove();
-				var code = c.textarea.val();
-				if(!code || !c.codeType) return undefined;
+			o._remove();
+			var code = c.textarea.val();
+			if(!code || !c.codeType) return undefined;
 
-				if(/file$/ig.test(c.codeType)){
-					var nodes = [];
+			if(/file$/ig.test(c.codeType)){
+				var nodes = [];
 
-					var arr = code.split('\n');
-					$.each(arr,function(idx){
-						if(arr[idx]){
-							var node = $(c._tag[c.codeType]).prop(/^js/ig.test(c.codeType) ? 'src' : 'href', arr[idx]);
-							!c.demoArea || node.appendTo(c.demoArea);
-							nodes.push(node[0]);
-						}
-					});
-					return c._result[c.codeType] = $(nodes);
-				}
-
-				if(c.codeType == 'script'){
-					code = '(function(){%1})();'.replace('%1',code);
-				}
-				var r = c._result[c.codeType] = $(c._tag[c.codeType]);
-				if(c.codeType=='script') try{eval(code)}catch(e){}
-				else {
-					try{
-						r.html(code)
+				var arr = code.split('\n');
+				$.each(arr,function(idx){
+					if(arr[idx]){
+						var node = $(c._tag[c.codeType]).prop(/^js/ig.test(c.codeType) ? 'src' : 'href', arr[idx]);
+						!c.demoArea || node.appendTo(c.demoArea);
+						nodes.push(node[0]);
 					}
-					catch(e){
-						c.codeType != 'css' || r.data(plugin.id + '-ie-style',addIEStyle(code));
-					}
+				});
+				return c._result[c.codeType] = $(nodes);
+			}
+
+			if(c.codeType == 'script'){
+				code = '(function(){%1})();'.replace('%1',code);
+			}
+			var r = c._result[c.codeType] = $(c._tag[c.codeType]);
+			if(c.codeType=='script') try{eval(code)}catch(e){}
+			else {
+				try{
+					r.html(code)
 				}
-				!c.demoArea || r.appendTo(c.demoArea);
-				return r;
+				catch(e){
+					c.codeType != 'css' || r.data(plugin.id + '-ie-style',addIEStyle(code));
+				}
 			}
-			catch(e){
-			}
+			!c.demoArea || r.appendTo(c.demoArea);
+			return r;
 		},
 
 		// デモオブジェクトの削除
@@ -454,9 +386,6 @@
 
 	// Setting
 	$.extend($.ex.codePrettify,{
-		status : {
-			runtime : 0
-		},
 		defaults : {
 			api : false, // true の場合 api オブジェクトを返す。
 			prettyClass : 'linenums', // linenums を指定すると行番号が表示される。
@@ -504,15 +433,10 @@
 			resetButton : '.reset-button', // デモリセットボタンのセレクタを指定。
 			resetLabel : 'RESET', // デモリセットボタンのラベル。
 			adjustEditorHeight : true, // true で編集モード時のテキストエリアの高さを自動調整する。
-			showCode : true, // true でコードを表示する。
-			showDemo : false, // true でデモを表示する。
-			autoSaveToStorage : false, // true でコードを local storage に自動保存する。
-			autoLoadFromStorage : false, // true で local storage 保存コードの自動ロードする。
-			clearStorage : false, // true で local storage 保存コードの自動削除する。
-			savePrefix : '', // local storage 保存キーのプレフィックスを指定。
-			onSave : function(api){} // 確定ボタンクリック時のコールバック処理を指定。
+			showCode : true, // true でコードを表示する
+			showDemo : false // true でデモを表示する
 		},
-		version : '0.4',
+		version : '0.3',
 		id : 'ex-code-prettify',
 		paramId : 'ex-code-prettify-param'
 	});
