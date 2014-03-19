@@ -7,10 +7,6 @@
 <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen" >
 <link href="jquery.ex-code-prettify.css" rel="stylesheet" type="text/css" media="screen" >
 <style>
-body{
-	margin-bottom:1000px;
-	padding-top:32px;
-}
 .desc strong{
 	color:#ff5577;
 }
@@ -31,7 +27,11 @@ div.demo-contents div.demo-area{
 </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+<script src="http://cyokodog.github.io/jquery.hash-contents/jquery.hash-contents.js"></script>
+<!--
 <script src="jquery.hash-contents/jquery.hash-contents.js"></script>
+-->
 <script src="google-code-prettify/prettify.js"></script>
 <script src="jquery.ex-code-prettify.js"></script>
 <script src="behave/behave.js"></script>
@@ -40,16 +40,33 @@ jQuery(function($){
 
 	//build demo contents
 	(function(){
-		var clone_demo = function(target, count){
+		var clone_demo = function(target, count, title){
 			var org = $(target);
-			for(var i = 0; i < count; i++) org.clone().insertAfter(org);
+
+			for(var i = 0; i < count; i++) {
+				var clone = org.clone().insertAfter(org);
+				if(title) $('<h3/>').text(title[title.length -i -1]).prependTo(clone);
+			}
+			if(title) $('<h3/>').text(title[0]).prependTo(org)
 			$(target).each(function(index){
 				$(this).data('demo-index', index);
 			});
 		}
-		clone_demo('div.base-demo-1', 3);
-		clone_demo('div.base-demo-2', 2);
-		clone_demo('div.base-demo-3', 1);
+		clone_demo('div.base-demo-1', 3, [
+			'ソースコードとデモを表示する',
+			'デモのみを表示する',
+			'ソースコードを編集する',
+			'ソースコードを Behave.js で編集する'
+		]);
+		clone_demo('div.base-demo-2', 2, [
+			'デモを下部に表示する',
+			'デモを右側に表示する',
+			'デモを左側に表示する'
+		]);
+		clone_demo('div.base-demo-3', 1, [
+			'複数のソースコードを１つのデモとして実行する',
+			'実行／リセットリンクを表示する'
+		]);
 		$('div.base-demo-2').each(function(index){
 			var pos = ['demo-bottom','demo-right','demo-left'][index];
 			$(this).data('demo-pos',pos).find('div.ex-code-prettify').addClass(pos);
@@ -58,7 +75,7 @@ jQuery(function($){
 
 	//control demo
 	var demo = function(api){
-		var target = api.getTarget();
+		var target = api.getActiveTarget();
 		var index = target.data('demo-index');
 		var esc = function(text){
 			var dummy = $('<div/>').text(text);
@@ -67,13 +84,17 @@ jQuery(function($){
 			return text;
 		}
 		var set_desc = function(html){
-			$('<pre class="desc"/>').html(html).prependTo(target);
+			var desc = $('<pre class="desc"/>').html(html);
+			var title = target.find('> h3');
+			if(title.size()) title.after(desc);
+			else desc.prependTo(target);
 		}
 		if(target.hasClass('base-demo-0')){
 			$('a.run').on('click',function(){
 				$('.base-demo-0').removeClass('base-demo-0');
 				$('.code').exCodePrettify();
 				$('.tabToSpace').exCodePrettify({tabToSpace:true});
+				return false;
 			});
 		}
 		else
@@ -185,9 +206,7 @@ jQuery(function($){
 					behaveJS : true
 				});
 				$('a.code-reset-' + (i + 1)).on('click', function(){
-					$.each(api, function(j){
-						api[j].clearStorage();
-					});
+					api.clearStorage();
 					location.reload();
 					return false;
 				});
@@ -197,56 +216,65 @@ jQuery(function($){
 
 	//control display
 	$('div.demo').hashContents({
-		prefix : 'Demo',
-		listTo : 'ul.index',
-		titleTo : 'span.demo-title',
+		reloadHashChange : true,
+		idPrefix : 'Demo',
+		listTo : 'ul.demo-index',
+		activeTitleTo : 'span.demo-title',
 		onActive : function(api){
 			demo(api);
 		}
 	});
 
+	$('small.ver').text('ver '+$.ex.codePrettify.version);
+
 });
 </script>
 </head>
 <body>
-	<div class="container">
-		<div class="page-header">
-			<h1>Ex Code Prettify</h1>
-			<p class="lead">$( pre or textarea ).exCodePrettify();</p>
-			<div class="btn-group">
-				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<span class="demo-title"></span> <span class="caret"></span>
+	<div class="navbar navbar-default navbar-fixed-topx" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
 				</button>
-				<ul class="dropdown-menu index" role="menu">
+			</div>
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="http://www.cyokodog.net/blog/ex-code-prettify-doc/" target="_blank"><span class="glyphicon glyphicon-book"></span> Document</a></li>
+					<li><a href="https://github.com/cyokodog/jquery.ex-code-prettify" target="_blank"><b class="glyphicon glyphicon-download-alt"></b> Download</a></li>
 				</ul>
 			</div>
 		</div>
 	</div>
 
-	<div class="navbar navbar-default navbar-fixed-top" role="navigation">
 	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-		</div>
-		<div class="collapse navbar-collapse navbar-ex1-collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="https://github.com/cyokodog/jquery.ex-code-prettify/blob/gh-pages/README.md" target="_blank"><span class="glyphicon glyphicon-book"></span> Document</a></li>
-				<li><a href="https://github.com/cyokodog/jquery.ex-code-prettify" target="_blank"><b class="glyphicon glyphicon-download-alt"></b> Download</a></li>
-			</ul>
+		<div class="page-header">
+			<h1>Ex Code Prettify <small class="ver"></small></h1>
+			<p class="lead">$( pre or textarea ).exCodePrettify()</p>
+			<div class="btn-group demo-index-group pull-right">
+				<button type="button" class="btn btn-default" data-toggle="dropdown">
+					<span>DEMO</span>
+				</button>
+				<button type="button" class="btn btn-default" data-toggle="dropdown">
+					<span class="demo-title"></span><!-- <span class="caret"></span>-->
+				</button>
+				<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu demo-index" role="menu">
+				</ul>
+			</div>
 		</div>
 	</div>
-	</div>
+
+
 
 	<div class="container">
 		<div class="demo base-demo-0">
-<!--
 			<h3>ソースコードをハイライト表示する</h3>
--->
 			<br/>
 			<div class="row">
 				<div class="col-md-2"><a class="run btn btn-success" href="#">RUN</a></div>
@@ -369,6 +397,7 @@ $('div.logo').animate(
 
 
 		<div class="demo base-demo-4">
+			<h3>外部ファイルを読み込む</h3>
 			<div class="ex-code-prettify demo-right">
 <textarea class="code" data-ex-code-prettify-param="{codeType:'cssFile'}">
 jquery.ex-inplace-editor/jquery.ex-inplace-editor.css
@@ -396,6 +425,7 @@ $('input.inplace-editor').exInplaceEditor({
 
 
 		<div class="demo base-demo-5 demo-contents">
+			<h3>独自のデザインにする</h3>
 			<div class="row">
 				<div class="col-md-12">
 					<button type="button" class="run-button btn btn-success">RUN</button>
@@ -441,6 +471,7 @@ div.logo{
 
 
 		<div class="demo base-demo-6">
+			<h3>編集したソースコードを localStorage に保存する</h3>
 			<div class="example">
 				<p>Ex.1 （<a class="code-reset-1" href="#">Ex.1 のコードをリセットする</a>）</p>
 				<div class="ex-code-prettify demo-right">

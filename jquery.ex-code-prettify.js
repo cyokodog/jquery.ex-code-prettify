@@ -2,7 +2,7 @@
  * 	Ex Code Prettify 0.4 - jQuery plugin
  *	written by cyokodog
  *
- *	Copyright (c) 2013 cyokodog 
+ *	Copyright (c) 2014 cyokodog 
  *		http://www.cyokodog.net/
  *		http://d.hatena.ne.jp/cyokodog/)
  *		http://cyokodog.tumblr.com/
@@ -76,13 +76,31 @@
 	// Namespace
 	$.ex = $.ex || {};
 
+	$.ex.api = function(api){
+		var api = $(api),api0 = api[0];
+		for(var name in api0)
+			(function(name){
+				if($.isFunction( api0[name] ))
+					api[ name ] = (/^get[^a-z]/.test(name)) ?
+						function(){
+							return api0[name].apply(api0,arguments);
+						} : 
+						function(){
+							var arg = arguments;
+							api.each(function(idx){
+								var apix = api[idx];
+								apix[name].apply(apix,arg);
+							})
+							return api;
+						}
+			})(name);
+		return api;
+	}
+
 	// Constructor
 	var plugin = $.ex.codePrettify = function(target, option){
 		var o = this,
 		c = o.config = $.extend(true,{}, $.ex.codePrettify.defaults, option, o.getJsonData(target) || {});
-
-
-
 		plugin.status.runtime ++;
 		c.savePrefix = c.savePrefix || (plugin.id + '-' + plugin.status.runtime)
 		c.target = target;
