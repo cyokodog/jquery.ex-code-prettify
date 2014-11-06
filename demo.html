@@ -60,8 +60,8 @@ jQuery(function($){
 		]);
 		clone_demo('div.base-demo-2', 2, [
 			'デモを下部に表示する',
-			'デモを右側に表示する',
-			'デモを左側に表示する'
+			'デモを右側に表示する(幅768px以上時)',
+			'デモを左側に表示する(幅768px以上時)'
 		]);
 		clone_demo('div.base-demo-3', 1, [
 			'複数のソースコードを１つのデモとして実行する',
@@ -210,6 +210,15 @@ jQuery(function($){
 					location.reload();
 					return false;
 				});
+			});
+		}
+		else
+		if(target.hasClass('base-demo-7')){
+			$('textarea.code').exCodePrettify({
+				behaveJS : true,
+				showDemo : true,
+				editCode : true,
+				showRunButton : true
 			});
 		}
 	}
@@ -513,6 +522,79 @@ $('div.ex2').hide().slideDown(2000);
 				</div>
 			</div>
 		</div>
+
+
+
+
+
+
+
+
+
+
+		<div class="demo base-demo-7">
+			<h3>$DEMO で自分のデモエリアを参照する</h3>
+			<p>それぞれのデモエリアに存在する要素に異なる処理を与える</p>
+			<div class="example">
+				<div class="ex-code-prettify demo-right">
+<textarea class="code HTML" data-ex-code-prettify-param="{codeType:'html'}">
+<div>demo</div>
+</textarea>
+<textarea class="code script" data-ex-code-prettify-param="{codeType:'script'}">
+$DEMO.find('div').animate({
+	'margin-left': 100
+});
+</textarea>
+				</div>
+			</div>
+
+			<div class="example">
+				<div class="ex-code-prettify demo-right">
+<textarea class="code HTML" data-ex-code-prettify-param="{codeType:'html'}">
+<div>demo</div>
+</textarea>
+<textarea class="code script" data-ex-code-prettify-param="{codeType:'script'}">
+$DEMO.find('div').animate({
+	'margin-top': 50
+});
+</textarea>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+		<div class="demo base-demo-7">
+			<h3>API を参照する</h3>
+			<p>APIにて自身のソースコードを取得し、デモエリアに出力する</p>
+			<div class="example">
+				<div class="ex-code-prettify demo-right">
+<textarea class="code HTML" data-ex-code-prettify-param="{codeType:'html'}">
+<pre></pre>
+</textarea>
+<textarea class="code script" data-ex-code-prettify-param="{codeType:'script'}">
+//自身のコードを取得
+var code = API.getCode();
+
+//デモエリアの pre を取得
+var pre = $DEMO.find('pre');
+
+//pre にコードをセット
+pre.text(code).hide().fadeIn(3000, function(){
+
+	// デモを再実行
+	API.runDemo();
+});
+</textarea>
+				</div>
+			</div>
+
+		</div>
+
+
+
 
 
 

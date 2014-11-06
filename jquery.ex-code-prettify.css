@@ -304,6 +304,16 @@ pre.ex-code-prettify ol.linenums li{
 	width:48%;
 	float:left;
 }
+@media(max-width:768px){
+	.demo-right div.code-area,
+	.demo-right div.demo-area,
+	.demo-left div.code-area,
+	.demo-left div.demo-area{
+		margin:0;
+		width:auto;
+		float:none;
+	}
+}
 .ex-code-prettify-hide-code div.demo-area{
 	width:auto;
 	float:none;

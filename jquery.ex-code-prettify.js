@@ -1,5 +1,5 @@
 /*
- * 	Ex Code Prettify 0.4 - jQuery plugin
+ * 	Ex Code Prettify 0.5 - jQuery plugin
  *	written by cyokodog
  *
  *	Copyright (c) 2014 cyokodog 
@@ -427,15 +427,19 @@
 							!c.demoArea || node.appendTo(c.demoArea);
 							nodes.push(node[0]);
 						}
-					});
+					}); 
 					return c._result[c.codeType] = $(nodes);
 				}
 
 				if(c.codeType == 'script'){
-					code = '(function(){%1})();'.replace('%1',code);
+					code = '(function(API, $DEMO){%1})(o, c.demoArea);'.replace('%1',code);
 				}
 				var r = c._result[c.codeType] = $(c._tag[c.codeType]);
-				if(c.codeType=='script') try{eval(code)}catch(e){}
+				if(c.codeType=='script') {
+					setTimeout(function(){
+						try{eval(code)}catch(e){}
+					}, 0);
+				}
 				else {
 					try{
 						r.html(code)
@@ -530,7 +534,7 @@
 			savePrefix : '', // local storage 保存キーのプレフィックスを指定。
 			onSave : function(api){} // 確定ボタンクリック時のコールバック処理を指定。
 		},
-		version : '0.4',
+		version : '0.5',
 		id : 'ex-code-prettify',
 		paramId : 'ex-code-prettify-param'
 	});
