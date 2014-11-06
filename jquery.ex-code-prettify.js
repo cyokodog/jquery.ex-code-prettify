@@ -432,7 +432,7 @@
 				}
 
 				if(c.codeType == 'script'){
-					code = '(function(API, $DEMO){%1})(o, c.demoArea.find('.demo-html'));'.replace('%1',code);
+					code = '(function(API, $DEMO){%1})(o, c.demoArea.find(".demo-html"));'.replace('%1',code);
 				}
 				var r = c._result[c.codeType] = $(c._tag[c.codeType]);
 				if(c.codeType=='script') {
