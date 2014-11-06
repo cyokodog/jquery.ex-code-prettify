@@ -533,7 +533,7 @@ $('div.ex2').hide().slideDown(2000);
 
 
 		<div class="demo base-demo-7">
-			<h3>$DEMO で自分のデモエリアを参照する</h3>
+			<h3>$DEMO で自身のデモエリアを参照する</h3>
 			<p>それぞれのデモエリアに存在する要素に異なる処理を与える</p>
 			<div class="example">
 				<div class="ex-code-prettify demo-right">
@@ -578,14 +578,14 @@ $DEMO.find('div').animate({
 //自身のコードを取得
 var code = API.getCode();
 
-//デモエリアの pre を取得
-var pre = $DEMO.find('pre');
+//デモエリアに pre を生成
+var pre = $DEMO.html('<pre/>').find('pre');
 
-//pre にコードをセット
+//pre にコードをセットし fade で表示
 pre.text(code).hide().fadeIn(3000, function(){
 
-	// デモを再実行
-	API.runDemo();
+    // fade が完了したらデモを再実行
+    API.runDemo();
 });
 </textarea>
 				</div>
