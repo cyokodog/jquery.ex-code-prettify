@@ -1,5 +1,5 @@
 /*
- * 	Ex Code Prettify 0.5 - jQuery plugin
+ * 	Ex Code Prettify 0.5.1 - jQuery plugin
  *	written by cyokodog
  *
  *	Copyright (c) 2014 cyokodog 
@@ -112,7 +112,7 @@
 			cssFile : '<link media="screen" rel="stylesheet" type="text/css"/>'
 		}
 		c._result = {};
-
+		c._loaded = false;
 		c.container = c.target.parents(c.container).eq(0);
 		if(!c.container.size()) c.container = c.target.parent();
 
@@ -407,6 +407,28 @@
 			c.textarea.height(o._calcTextareaHeight(c.pre));
 		},
 
+		// 外部ファイル読み込み完了後の実行
+		_onFileLoaded : function(f){
+			var o = this, c = o.config;
+			var callee = arguments.callee;
+			var fileLoaded = true;
+			$.each(c.rendarFrom, function(idx){
+				var api = c.rendarFrom[idx];
+				var conf = api.getConfig();
+				if(/cssFile|jsFile/.test(conf.codeType) && !conf._loaded){
+					fileLoaded = false;
+				}
+			});
+			if(fileLoaded){
+				f();
+			}
+			else{
+				setTimeout(function(){
+					f.count = (f.count || 0) + 1;
+					if(f.count < 1000000) callee.call(o, f);
+				},0);
+			}
+		},
 
 		// デモオブジェクトの生成
 		_rendar : function(){
@@ -416,39 +438,42 @@
 				o._remove();
 				var code = c.textarea.val();
 				if(!code || !c.codeType) return undefined;
-
 				if(/file$/ig.test(c.codeType)){
 					var nodes = [];
-
 					var arr = code.split('\n');
 					$.each(arr,function(idx){
 						if(arr[idx]){
-							var node = $(c._tag[c.codeType]).prop(/^js/ig.test(c.codeType) ? 'src' : 'href', arr[idx]);
+							var node = $(c._tag[c.codeType]);
+							node.on('load', function(){
+								c._loaded = true;
+							});
 							!c.demoArea || node.appendTo(c.demoArea);
+							node.prop(/^js/ig.test(c.codeType) ? 'src' : 'href', arr[idx]);
 							nodes.push(node[0]);
 						}
 					}); 
 					return c._result[c.codeType] = $(nodes);
 				}
-
 				if(c.codeType == 'script'){
 					code = '(function(API, $DEMO){%1})(o, c.demoArea.find(".demo-html"));'.replace('%1',code);
 				}
 				var r = c._result[c.codeType] = $(c._tag[c.codeType]);
-				if(c.codeType=='script') {
-					setTimeout(function(){
-						try{eval(code)}catch(e){}
-					}, 0);
-				}
-				else {
-					try{
-						r.html(code)
+				o._onFileLoaded(function(){
+					if(c.codeType=='script') {
+						setTimeout(function(){
+							try{eval(code)}catch(e){}
+						}, 0);
 					}
-					catch(e){
-						c.codeType != 'css' || r.data(plugin.id + '-ie-style',addIEStyle(code));
+					else {
+						try{
+							r.html(code)
+						}
+						catch(e){
+							c.codeType != 'css' || r.data(plugin.id + '-ie-style',addIEStyle(code));
+						}
 					}
-				}
-				!c.demoArea || r.appendTo(c.demoArea);
+					!c.demoArea || r.appendTo(c.demoArea);
+				});
 				return r;
 			}
 			catch(e){
@@ -534,7 +559,7 @@
 			savePrefix : '', // local storage 保存キーのプレフィックスを指定。
 			onSave : function(api){} // 確定ボタンクリック時のコールバック処理を指定。
 		},
-		version : '0.5',
+		version : '0.5.1',
 		id : 'ex-code-prettify',
 		paramId : 'ex-code-prettify-param'
 	});
