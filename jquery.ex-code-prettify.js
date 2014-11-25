@@ -1,5 +1,5 @@
 /*
- * 	Ex Code Prettify 0.5.2 - jQuery plugin
+ * 	Ex Code Prettify 0.5.3 - jQuery plugin
  *	written by cyokodog
  *
  *	Copyright (c) 2014 cyokodog 
@@ -440,7 +440,10 @@
 				if(!code || !c.codeType) return undefined;
 				if(/file$/ig.test(c.codeType)){
 					var nodes = [];
-					var arr = code.split('\n');
+					var arr = [];
+					$.each(code.split('\n'), function(){
+						if(/.+\.(js|css)$/.test(this)) arr.push(this);
+					});
 					c._loaded = {
 						count : 0,
 						complete : false
@@ -564,7 +567,7 @@
 			savePrefix : '', // local storage 保存キーのプレフィックスを指定。
 			onSave : function(api){} // 確定ボタンクリック時のコールバック処理を指定。
 		},
-		version : '0.5.2',
+		version : '0.5.3',
 		id : 'ex-code-prettify',
 		paramId : 'ex-code-prettify-param'
 	});
