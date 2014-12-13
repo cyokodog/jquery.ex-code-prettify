@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8,IE=9,IE=10,IE=11,IE=12" />
+<title>Ex Code Prettify | jQuery Plugin :: Demo</title>
+<link href='http://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
+<link href="jquery.ex-code-prettify.css" rel="stylesheet" type="text/css" media="screen" >
+<style>
+h1{
+	font-size: 36px;
+	font-family: Raleway;
+	font-weight: normal;
+}
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="google-code-prettify/prettify.js"></script>
+<script src="jquery.ex-code-prettify.js"></script>
+<script src="behave/behave.js"></script>
+<script>
+jQuery(function($){
+	$('textarea.code').exCodePrettify({
+		showRunButton : true,
+		showDemo : true,
+		editCode : true,
+		behaveJS : true
+	});
+});
+</script>
+</head>
+<body>
+<h1>EX CODE PRETTIFY TEMPLATE</h1>
+<div class="ex-code-prettify demo-right">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
+.logo{
+	text-align : center;
+	font-size : 20px;
+	opacity:.3;
+	font-family:impact;
+	color:#5588cc;
+}
+</textarea>
+<textarea class="code HTML" data-ex-code-prettify-param="{codeType:'html'}">
+<div class="logo">Ex Code Prettify</div>
+</textarea>
+<textarea class="code script" data-ex-code-prettify-param="{codeType:'script', autoRun:false}">
+$('div.logo').animate(
+	{opacity:1, 'font-size':60,'margin-top':30}, 1500,
+	function(){
+		var t = $(this);
+		var method = t.is(':hidden') ? 'fadeIn' : 'fadeOut';
+		t[method](1500,arguments.callee);
+	}
+);
+</textarea>
+</div>
+
+</body>
+</html>

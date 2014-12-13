@@ -274,6 +274,7 @@ pre.ex-code-prettify ol.linenums li{
 .ex-code-prettify div.demo-area{
 	position:relative;
 	overflow:hidden;
+	min-height:80px;
 }
 .demo-bottom div.ex-code-prettify-contents{
 	border-width:0 0 1px;
@@ -330,7 +331,7 @@ pre.ex-code-prettify ol.linenums li{
 	border:solid 1px #ddd;
 	border-width:0 1px 1px 0;
 	border-radius:0 0 4px 0;
-	background:#f0f0f0;
+	background:#e8e8e8;
 }
 .demo-title-area .demo-title{
 	margin:0 16px;
@@ -341,7 +342,13 @@ pre.ex-code-prettify ol.linenums li{
 }
 .demo-title-area .demo-tool a{
 	margin:0 8px;
+	text-decoration:none;
+	color:#00aacc;
 }
+.demo-title-area .demo-tool a:hover{
+	color:#ff5577;
+}
+
 .demo-bottom .demo-title-area{
 	top:auto;
 	left:0;
