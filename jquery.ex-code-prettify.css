@@ -274,7 +274,7 @@ pre.ex-code-prettify ol.linenums li{
 .ex-code-prettify div.demo-area{
 	position:relative;
 	overflow:hidden;
-	min-height:80px;
+	min-height:21px;
 }
 .demo-bottom div.ex-code-prettify-contents{
 	border-width:0 0 1px;
